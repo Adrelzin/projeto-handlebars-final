@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{#if detalhe}}Detalhes{{else}}{{#if form}}{{#if reestoque}}Editar{{else}}Cadastrar{{/if}}{{else}}Lista de{{/if}}{{/if}} Reestoques</title>
+    <link rel='icon' href='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxTHUcZmxfBVVwDhiaJlD6hnpNCyp_jaMpnQ&s'>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; position: relative; }
+        body::before {
+            content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('/images/Background.jpg'); background-size: cover;
+            background-position: center; background-attachment: fixed; opacity: 0.60; z-index: -1;
+        }
+        header { background-color: rgba(255, 255, 255, 0.95); padding: 20px; text-align: center; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); }
+        header h2 { color: #009688; font-size: 28px; margin-bottom: 10px; }
+        .container { max-width: 1000px; margin: 40px auto; background: rgba(255, 255, 255, 0.95); padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); }
+        ul { list-style: none; margin-bottom: 20px; }
+        li { padding: 15px; margin-bottom: 10px; background-color: rgba(249, 249, 249, 0.95); border-left: 4px solid #009688; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; transition: transform 0.2s, box-shadow 0.2s; }
+        li:hover { transform: translateX(5px); box-shadow: 0 2px 8px rgba(0, 150, 136, 0.3); }
+        li .info { flex: 1; min-width: 300px; }
+        li .info a { color: #333; text-decoration: none; font-weight: bold; }
+        li .info a:hover { color: #009688; }
+        li .actions { display: flex; gap: 10px; }
+        li .actions a { padding: 8px 16px; background-color: #2196F3; color: white; text-decoration: none; border-radius: 4px; font-size: 14px; transition: background-color 0.2s, transform 0.2s; }
+        li .actions a:hover { background-color: #0b7dda; transform: translateY(-2px); }
+        li .actions button { padding: 8px 16px; background-color: #f44336; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; transition: background-color 0.2s, transform 0.2s; }
+        li .actions button:hover { background-color: #da190b; transform: translateY(-2px); }
+        form { display: flex; flex-direction: column; gap: 15px; }
+        label { font-weight: bold; color: #333; }
+        input, select, textarea { padding: 12px; font-size: 14px; border: 1px solid #ddd; border-radius: 5px; transition: border-color 0.2s; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: #009688; box-shadow: 0 0 5px rgba(0, 150, 136, 0.3); }
+        textarea { min-height: 80px; resize: vertical; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .detail-item { padding: 15px; margin-bottom: 10px; background-color: rgba(249, 249, 249, 0.95); border-left: 4px solid #009688; border-radius: 4px; }
+        .detail-item strong { color: #009688; display: inline-block; min-width: 180px; }
+        button[type="submit"], .btn-new { padding: 12px 24px; background-color: #009688; color: white; border: none; border-radius: 5px; cursor: pointer; text-decoration: none; display: inline-block; font-weight: bold; transition: background-color 0.2s, transform 0.2s; }
+        button[type="submit"]:hover, .btn-new:hover { background-color: #00796B; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); }
+        .back-link { display: inline-block; padding: 12px 24px; color: #009688; text-decoration: none; font-weight: bold; margin-left: 10px; border: 2px solid #009688; border-radius: 5px; transition: background-color 0.2s, color 0.2s; }
+        .back-link:hover { background-color: #009688; color: white; }
+    </style>
+</head>
+<body>
+    <header>
+        <h2>
+            {{#if detalhe}}Detalhes do Reestoque
+            {{else}}{{#if form}}{{#if reestoque}}Editar Reestoque{{else}}Cadastrar Reestoque{{/if}}
+            {{else}}Lista de Reestoques{{/if}}{{/if}}
+        </h2>
+    </header>
+
+    <div class="container">
+        {{#if lista}}
+        <ul>
+            {{#each reestoques}}
+            <li>
+                <div class="info">
+                    <a href="/reestoques/ver/{{id}}">Reestoque #{{id}}</a><br>
+                    Material: {{Material.nome}} | Fornecedor: {{Fornecedor.nome}}<br>
+                    Quantidade: {{quantidade}} | Valor Total: R$ {{valorTotal}}<br>
+                    Data: {{dataReestoque}} | NF: {{notaFiscal}}
+                </div>
+                <div class="actions">
+                    <a href="/reestoques/{{id}}/editar">Editar</a>
+                    <form action="/reestoques/excluir/{{id}}" method="POST" style="margin:0;">
+                        <button type="submit" onclick="return confirm('Confirma exclusão? A quantidade será removida do estoque.')">Excluir</button>
+                    </form>
+                </div>
+            </li>
+            {{/each}}
+        </ul>
+        <a href="/reestoques/novo" class="btn-new">+ Cadastrar Novo Reestoque</a>
+        <a href="/" class="back-link">← Voltar</a>
+        {{/if}}
+
+        {{#if form}}
+        <form action="{{#if reestoque}}/reestoques/{{reestoque.id}}/editar{{else}}/reestoques{{/if}}" method="POST">
+            <label for="materialId">Material:</label>
+            <select name="materialId" id="materialId" required>
+                <option value="">Selecione um material</option>
+                {{#each materiais}}
+                <option value="{{id}}" {{#if (eq id ../reestoque.materialId)}}selected{{/if}}>{{nome}} (Estoque atual: {{quantidade}})</option>
+                {{/each}}
+            </select>
+
+            <label for="fornecedorId">Fornecedor:</label>
+            <select name="fornecedorId" id="fornecedorId" required>
+                <option value="">Selecione um fornecedor</option>
+                {{#each fornecedores}}
+                <option value="{{id}}" {{#if (eq id ../reestoque.fornecedorId)}}selected{{/if}}>{{nome}} - {{cnpj}}</option>
+                {{/each}}
+            </select>
+
+            <label for="quantidade">Quantidade:</label>
+            <input type="number" name="quantidade" id="quantidade" value="{{reestoque.quantidade}}" placeholder="Ex: 100" min="1" required>
+
+            <div class="form-row">
+                <div>
+                    <label for="valorUnitario">Valor Unitário (R$):</label>
+                    <input type="number" step="0.01" name="valorUnitario" id="valorUnitario" value="{{reestoque.valorUnitario}}" placeholder="Ex: 15.50" required>
+                </div>
+                <div>
+                    <label for="dataReestoque">Data do Reestoque:</label>
+                    <input type="date" name="dataReestoque" id="dataReestoque" value="{{reestoque.dataReestoque}}" required>
+                </div>
+            </div>
+
+            <label for="notaFiscal">Número da Nota Fiscal:</label>
+            <input type="text" name="notaFiscal" id="notaFiscal" value="{{reestoque.notaFiscal}}" placeholder="Ex: NF-001234">
+
+            <label for="observacoes">Observações (opcional):</label>
+            <textarea name="observacoes" id="observacoes" placeholder="Observações adicionais sobre o reestoque">{{reestoque.observacoes}}</textarea>
+
+            <button type="submit">{{#if reestoque}}Salvar Alterações{{else}}Cadastrar{{/if}}</button>
+        </form>
+        <a href="/reestoques" class="back-link">← Voltar</a>
+        {{/if}}
+
+        {{#if detalhe}}
+        <div class="detail-item">
+            <strong>ID do Reestoque:</strong> {{reestoque.id}}
+        </div>
+        <div class="detail-item">
+            <strong>Material:</strong> {{reestoque.Material.nome}}
+        </div>
+        <div class="detail-item">
+            <strong>Fornecedor:</strong> {{reestoque.Fornecedor.nome}} ({{reestoque.Fornecedor.cnpj}})
+        </div>
+        <div class="detail-item">
+            <strong>Quantidade:</strong> {{reestoque.quantidade}}
+        </div>
+        <div class="detail-item">
+            <strong>Valor Unitário:</strong> R$ {{reestoque.valorUnitario}}
+        </div>
+        <div class="detail-item">
+            <strong>Valor Total:</strong> R$ {{reestoque.valorTotal}}
+        </div>
+        <div class="detail-item">
+            <strong>Data do Reestoque:</strong> {{reestoque.dataReestoque}}
+        </div>
+        <div class="detail-item">
+            <strong>Nota Fiscal:</strong> {{reestoque.notaFiscal}}
+        </div>
+        {{#if reestoque.observacoes}}
+        <div class="detail-item">
+            <strong>Observações:</strong> {{reestoque.observacoes}}
+        </div>
+        {{/if}}
+        <a href="/reestoques" class="back-link">← Voltar</a>
+        {{/if}}
+    </div>
+</body>
+</html>

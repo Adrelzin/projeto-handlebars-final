@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{#if detalhe}}Detalhes{{else}}{{#if form}}{{#if retirada}}Editar{{else}}Cadastrar{{/if}}{{else}}Lista de{{/if}}{{/if}} Retiradas</title>
+    <link rel='icon' href='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxTHUcZmxfBVVwDhiaJlD6hnpNCyp_jaMpnQ&s'>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; position: relative; }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('/images/Background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            opacity: 0.60;
+            z-index: -1;
+        }
+        header {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        header h2 { color: #E91E63; font-size: 28px; margin-bottom: 10px; }
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        .filter-container {
+            background-color: rgba(249, 249, 249, 0.95);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #E91E63;
+        }
+        .filter-form { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
+        .filter-group { flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 5px; }
+        .filter-group label { font-weight: bold; color: #333; font-size: 14px; }
+        .filter-group input, .filter-group select { padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; }
+        .filter-buttons { display: flex; gap: 10px; }
+        .btn-filter, .btn-clear {
+            padding: 10px 20px;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        .btn-filter { background-color: #E91E63; }
+        .btn-filter:hover { background-color: #C2185B; }
+        .btn-clear { background-color: #757575; text-decoration: none; display: inline-block; }
+        .btn-clear:hover { background-color: #616161; }
+        ul { list-style: none; margin-bottom: 20px; }
+        li {
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: rgba(249, 249, 249, 0.95);
+            border-left: 4px solid #E91E63;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        li:hover { transform: translateX(5px); box-shadow: 0 2px 8px rgba(233, 30, 99, 0.3); }
+        li .info { flex: 1; min-width: 300px; }
+        li .info a { color: #333; text-decoration: none; font-weight: bold; }
+        li .info a:hover { color: #E91E63; }
+        li .actions { display: flex; gap: 10px; }
+        li .actions a {
+            padding: 8px 16px;
+            background-color: #2196F3;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+        li .actions a:hover { background-color: #0b7dda; transform: translateY(-2px); }
+        li .actions button {
+            padding: 8px 16px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+        li .actions button:hover { background-color: #da190b; transform: translateY(-2px); }
+        form { display: flex; flex-direction: column; gap: 15px; }
+        label { font-weight: bold; color: #333; }
+        input, select, textarea {
+            padding: 12px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            transition: border-color 0.2s;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #E91E63;
+            box-shadow: 0 0 5px rgba(233, 30, 99, 0.3);
+        }
+        textarea { min-height: 80px; resize: vertical; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .radio-group { display: flex; gap: 20px; padding: 10px 0; }
+        .radio-group label { display: flex; align-items: center; gap: 5px; font-weight: normal; cursor: pointer; }
+        .radio-group input[type="radio"] { width: auto; cursor: pointer; }
+        .conditional-select { display: none; }
+        .conditional-select.active { display: block; }
+        .detail-item {
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: rgba(249, 249, 249, 0.95);
+            border-left: 4px solid #E91E63;
+            border-radius: 4px;
+        }
+        .detail-item strong { color: #E91E63; display: inline-block; min-width: 200px; }
+        button[type="submit"], .btn-new {
+            padding: 12px 24px;
+            background-color: #E91E63;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: bold;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+        button[type="submit"]:hover, .btn-new:hover {
+            background-color: #C2185B;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .back-link {
+            display: inline-block;
+            padding: 12px 24px;
+            color: #E91E63;
+            text-decoration: none;
+            font-weight: bold;
+            margin-left: 10px;
+            border: 2px solid #E91E63;
+            border-radius: 5px;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .back-link:hover { background-color: #E91E63; color: white; }
+    </style>
+</head>
+<body>
+    <header>
+        <h2>
+            {{#if detalhe}}Detalhes da Retirada
+            {{else}}{{#if form}}{{#if retirada}}Editar Retirada{{else}}Cadastrar Retirada{{/if}}
+            {{else}}Lista de Retiradas{{/if}}{{/if}}
+        </h2>
+    </header>
+
+    <div class="container">
+        {{#if lista}}
+        <div class="filter-container">
+            <form action="/retiradas" method="GET" class="filter-form">
+                <div class="filter-group">
+                    <label for="tipo">Buscar por:</label>
+                    <select name="tipo" id="tipo">
+                        <option value="">Todos</option>
+                        <option value="aluno" {{#if (eq tipo 'aluno')}}selected{{/if}}>Aluno</option>
+                        <option value="professor" {{#if (eq tipo 'professor')}}selected{{/if}}>Professor</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="busca">Nome:</label>
+                    <input type="text" name="busca" id="busca" value="{{busca}}" placeholder="Digite o nome...">
+                </div>
+                <div class="filter-buttons">
+                    <button type="submit" class="btn-filter">Buscar</button>
+                    <a href="/retiradas" class="btn-clear">Limpar</a>
+                </div>
+            </form>
+        </div>
+
+        <ul>
+            {{#each retiradas}}
+            <li>
+                <div class="info">
+                    <a href="/retiradas/ver/{{id}}">Retirada #{{id}}</a><br>
+                    {{#if Aluno}}Aluno: {{Aluno.nome}}{{else if Professor}}Professor: {{Professor.nome}}{{/if}}
+                    | Material: {{Material.nome}} | Qtd: {{quantidade}}<br>
+                    Data: {{dataRetirada}} às {{horaRetirada}}
+                    {{#if Servidor}}<br>Responsável: {{Servidor.nome}}{{/if}}
+                </div>
+                <div class="actions">
+                    <a href="/retiradas/{{id}}/editar">Editar</a>
+                    <form action="/retiradas/excluir/{{id}}" method="POST" style="margin:0;">
+                        <button type="submit" onclick="return confirm('Confirma exclusão?')">Excluir</button>
+                    </form>
+                </div>
+            </li>
+            {{/each}}
+        </ul>
+        <a href="/retiradas/nova" class="btn-new">+ Cadastrar Nova Retirada</a>
+        <a href="/" class="back-link">← Voltar</a>
+        {{/if}}
+
+        {{#if form}}
+        <form action="{{#if retirada}}/retiradas/{{retirada.id}}/editar{{else}}/retiradas{{/if}}" method="POST">
+            <label>Quem está retirando?</label>
+            <div class="radio-group">
+                <label>
+                    <input type="radio" name="tipoRetirada" value="aluno" {{#if retirada}}{{#if retirada.alunoId}}checked{{/if}}{{else}}checked{{/if}} onchange="toggleRetirada(this.value)">
+                    Aluno
+                </label>
+                <label>
+                    <input type="radio" name="tipoRetirada" value="professor" {{#if retirada}}{{#if retirada.professorId}}checked{{/if}}{{/if}} onchange="toggleRetirada(this.value)">
+                    Professor
+                </label>
+            </div>
+
+            <div id="alunoSelect" class="conditional-select {{#if retirada}}{{#if retirada.alunoId}}active{{/if}}{{else}}active{{/if}}">
+                <label for="alunoId">Aluno:</label>
+                <select name="alunoId" id="alunoId">
+                    <option value="">Selecione um aluno</option>
+                    {{#each alunos}}
+                    <option value="{{id}}" {{#if (eq id ../retirada.alunoId)}}selected{{/if}}>{{nome}} - {{matricula}}</option>
+                    {{/each}}
+                </select>
+            </div>
+
+            <div id="professorSelect" class="conditional-select {{#if retirada}}{{#if retirada.professorId}}active{{/if}}{{/if}}">
+                <label for="professorId">Professor:</label>
+                <select name="professorId" id="professorId">
+                    <option value="">Selecione um professor</option>
+                    {{#each professores}}
+                    <option value="{{id}}" {{#if (eq id ../retirada.professorId)}}selected{{/if}}>{{nome}} - {{disciplina}}</option>
+                    {{/each}}
+                </select>
+            </div>
+
+            <label for="materialId">Material:</label>
+            <select name="materialId" id="materialId" required>
+                {{#each materiais}}
+                <option value="{{id}}" {{#if (eq id ../retirada.materialId)}}selected{{/if}}>{{nome}} (Disponível: {{quantidade}})</option>
+                {{/each}}
+            </select>
+
+            <label for="quantidade">Quantidade:</label>
+            <input type="number" name="quantidade" id="quantidade" value="{{retirada.quantidade}}" placeholder="Ex: 5" min="1" required>
+
+            <div class="form-row">
+                <div>
+                    <label for="dataRetirada">Data da Retirada:</label>
+                    <input type="date" name="dataRetirada" id="dataRetirada" value="{{retirada.dataRetirada}}" required>
+                </div>
+                <div>
+                    <label for="horaRetirada">Hora da Retirada:</label>
+                    <input type="time" name="horaRetirada" id="horaRetirada" value="{{retirada.horaRetirada}}" required>
+                </div>
+            </div>
+
+            <label for="servidorId">Responsável pela Entrega:</label>
+            <select name="servidorId" id="servidorId" required>
+                <option value="">Selecione um servidor</option>
+                {{#each servidores}}
+                <option value="{{id}}" {{#if (eq id ../retirada.servidorId)}}selected{{/if}}>{{nome}} - {{cargo}} ({{setor}})</option>
+                {{/each}}
+            </select>
+
+            <label for="finalidade">Finalidade:</label>
+            <input type="text" name="finalidade" id="finalidade" value="{{retirada.finalidade}}" placeholder="Ex: Aula de Arte" required>
+
+            <label for="observacoes">Observações (opcional):</label>
+            <textarea name="observacoes" id="observacoes" placeholder="Observações adicionais">{{retirada.observacoes}}</textarea>
+
+            <button type="submit">{{#if retirada}}Salvar Alterações{{else}}Cadastrar{{/if}}</button>
+        </form>
+        <a href="/retiradas" class="back-link">← Voltar</a>
+
+        <script>
+            function toggleRetirada(tipo) {
+                const alunoSelect = document.getElementById('alunoSelect');
+                const professorSelect = document.getElementById('professorSelect');
+                const alunoInput = document.getElementById('alunoId');
+                const professorInput = document.getElementById('professorId');
+
+                if (tipo === 'aluno') {
+                    alunoSelect.classList.add('active');
+                    professorSelect.classList.remove('active');
+                    alunoInput.required = true;
+                    professorInput.required = false;
+                    professorInput.value = '';
+                } else {
+                    professorSelect.classList.add('active');
+                    alunoSelect.classList.remove('active');
+                    professorInput.required = true;
+                    alunoInput.required = false;
+                    alunoInput.value = '';
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                const tipoSelecionado = document.querySelector('input[name="tipoRetirada"]:checked');
+                if (tipoSelecionado) {
+                    toggleRetirada(tipoSelecionado.value);
+                }
+            });
+        </script>
+        {{/if}}
+
+        {{#if detalhe}}
+        <div class="detail-item">
+            <strong>ID da Retirada:</strong> {{retirada.id}}
+        </div>
+        {{#if retirada.Aluno}}
+        <div class="detail-item">
+            <strong>Aluno:</strong> {{retirada.Aluno.nome}} ({{retirada.Aluno.matricula}})
+        </div>
+        {{/if}}
+        {{#if retirada.Professor}}
+        <div class="detail-item">
+            <strong>Professor:</strong> {{retirada.Professor.nome}} - {{retirada.Professor.disciplina}}
+        </div>
+        {{/if}}
+        <div class="detail-item">
+            <strong>Material:</strong> {{retirada.Material.nome}}
+        </div>
+        <div class="detail-item">
+            <strong>Quantidade:</strong> {{retirada.quantidade}}
+        </div>
+        <div class="detail-item">
+            <strong>Data da Retirada:</strong> {{retirada.dataRetirada}}
+        </div>
+        <div class="detail-item">
+            <strong>Hora da Retirada:</strong> {{retirada.horaRetirada}}
+        </div>
+        <div class="detail-item">
+            <strong>Responsável pela Entrega:</strong>
+            {{#if retirada.Servidor}}
+                {{retirada.Servidor.nome}} - {{retirada.Servidor.cargo}} ({{retirada.Servidor.setor}})
+            {{else}}
+                Não informado
+            {{/if}}
+        </div>
+        <div class="detail-item">
+            <strong>Finalidade:</strong> {{retirada.finalidade}}
+        </div>
+        {{#if retirada.observacoes}}
+        <div class="detail-item">
+            <strong>Observações:</strong> {{retirada.observacoes}}
+        </div>
+        {{/if}}
+        <a href="/retiradas" class="back-link">← Voltar</a>
+        {{/if}}
+    </div>
+</body>
+</html>

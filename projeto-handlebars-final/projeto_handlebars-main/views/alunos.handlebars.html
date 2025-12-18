@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>{{#if detalhe}}Detalhes{{else}}{{#if form}}{{#if aluno}}Editar{{else}}Cadastrar{{/if}}{{else}}Lista
+        de{{/if}}{{/if}} Alunos</title>
+    <link rel='icon'
+        href='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxTHUcZmxfBVVwDhiaJlD6hnpNCyp_jaMpnQ&s'>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('/images/Background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            opacity: 0.60;
+            z-index: -1;
+        }
+
+        header {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        header h2 {
+            color: #9C27B0;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        ul {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        li {
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: rgba(249, 249, 249, 0.95);
+            border-left: 4px solid #9C27B0;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        li:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(156, 39, 176, 0.3);
+        }
+
+        li .info a {
+            color: #333;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        li .info a:hover {
+            color: #9C27B0;
+        }
+
+        li .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        li .actions a {
+            padding: 8px 16px;
+            background-color: #2196F3;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+
+        li .actions a:hover {
+            background-color: #0b7dda;
+            transform: translateY(-2px);
+        }
+
+        li .actions button {
+            padding: 8px 16px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+
+        li .actions button:hover {
+            background-color: #da190b;
+            transform: translateY(-2px);
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        input,
+        select {
+            padding: 12px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            transition: border-color 0.2s;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #9C27B0;
+            box-shadow: 0 0 5px rgba(156, 39, 176, 0.3);
+        }
+
+        .detail-item {
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: rgba(249, 249, 249, 0.95);
+            border-left: 4px solid #9C27B0;
+            border-radius: 4px;
+        }
+
+        .detail-item strong {
+            color: #9C27B0;
+            display: inline-block;
+            min-width: 180px;
+        }
+
+        button[type="submit"],
+        .btn-new {
+            padding: 12px 24px;
+            background-color: #9C27B0;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: bold;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+
+        button[type="submit"]:hover,
+        .btn-new:hover {
+            background-color: #7B1FA2;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .back-link {
+            display: inline-block;
+            padding: 12px 24px;
+            color: #9C27B0;
+            text-decoration: none;
+            font-weight: bold;
+            margin-left: 10px;
+            border: 2px solid #9C27B0;
+            border-radius: 5px;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .back-link:hover {
+            background-color: #9C27B0;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h2>
+            {{#if detalhe}}Detalhes do Aluno
+            {{else}}{{#if form}}{{#if aluno}}Editar Aluno{{else}}Cadastrar Aluno{{/if}}
+            {{else}}Lista de Alunos{{/if}}{{/if}}
+        </h2>
+    </header>
+
+    <div class="container">
+
+        {{#if lista}}
+        <ul>
+            {{#each alunos}}
+            <li>
+                <div class="info">
+                    <a href="/alunos/ver/{{id}}">{{nome}}</a> - Matrícula: {{matricula}} - Turma: {{#if
+                    Turma}}{{Turma.nome}}{{else}}Sem turma{{/if}}
+                </div>
+                <div class="actions">
+                    <a href="/alunos/{{id}}/editar">Editar</a>
+                    <form action="/alunos/excluir/{{id}}" method="POST" style="margin:0;">
+                        <button type="submit" onclick="return confirm('Confirma exclusão?')">Excluir</button>
+                    </form>
+                </div>
+            </li>
+            {{/each}}
+        </ul>
+        <a href="/alunos/novo" class="btn-new">+ Cadastrar Novo Aluno</a>
+        <a href="/" class="back-link">← Voltar</a>
+        {{/if}}
+
+        {{#if form}}
+        <form action="{{#if aluno}}/alunos/{{aluno.id}}/editar{{else}}/alunos{{/if}}" method="POST">
+            <label for="nome">Nome:</label>
+            <input type="text" name="nome" id="nome" value="{{aluno.nome}}" placeholder="Ex: João Silva" required>
+
+            <label for="matricula">Matrícula:</label>
+            <input type="text" name="matricula" id="matricula" value="{{aluno.matricula}}" placeholder="Ex: 2024001"
+                required>
+
+            <label for="dataNascimento">Data de Nascimento:</label>
+            <input type="date" name="dataNascimento" id="dataNascimento" value="{{aluno.dataNascimento}}" required>
+
+            <label for="turmaId">Turma:</label>
+            <select name="turmaId" id="turmaId">
+                <option value="">Sem turma</option>
+                {{#each turmas}}
+                <option value="{{id}}" {{#if (eq id ../aluno.turmaId)}}selected{{/if}}>{{nome}}</option>
+                {{/each}}
+            </select>
+
+            <button type="submit">{{#if aluno}}Salvar Alterações{{else}}Cadastrar{{/if}}</button>
+        </form>
+        <a href="/alunos" class="back-link">← Voltar</a>
+        {{/if}}
+
+        {{#if detalhe}}
+        <div class="detail-item">
+            <strong>ID:</strong> {{aluno.id}}
+        </div>
+        <div class="detail-item">
+            <strong>Nome:</strong> {{aluno.nome}}
+        </div>
+        <div class="detail-item">
+            <strong>Matrícula:</strong> {{aluno.matricula}}
+        </div>
+        <div class="detail-item">
+            <strong>Data de Nascimento:</strong> {{aluno.dataNascimento}}
+        </div>
+        <div class="detail-item">
+            <strong>Turma:</strong> {{#if aluno.Turma}}{{aluno.Turma.nome}}{{else}}Sem turma{{/if}}
+        </div>
+        <a href="/alunos" class="back-link">← Voltar</a>
+        {{/if}}
+
+    </div>
+</body>
+
+</html>

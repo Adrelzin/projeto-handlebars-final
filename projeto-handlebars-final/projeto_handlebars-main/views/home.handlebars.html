@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Sistema Escolar</title>
+    <link rel='icon'
+        href='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxTHUcZmxfBVVwDhiaJlD6hnpNCyp_jaMpnQ&s'>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('/images/Background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            opacity: 0.60;
+            z-index: -1;
+        }
+
+        header {
+            background-color: rgba(255, 255, 255);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .menu {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            overflow-x: auto;
+        }
+
+        nav button {
+            padding: 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            white-space: nowrap;
+        }
+
+        nav button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        nav button.material {
+            background-color: #4CAF50;
+        }
+
+        nav button.professor {
+            background-color: #2196F3;
+        }
+
+        nav button.turma {
+            background-color: #FF9800;
+        }
+
+        nav button.aluno {
+            background-color: #9C27B0;
+        }
+
+        nav button.servidor {
+            background-color: #607D8B;
+        }
+
+        nav button.retirada {
+            background-color: #E91E63;
+        }
+
+        nav button.responsavel {
+            background-color: #00BCD4;
+        }
+
+        nav button.fornecedor {
+            background-color: #FF5722;
+        }
+
+        nav button.reestoque {
+            background-color: #009688;
+        }
+
+        nav button a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            margin-top: 40px;
+        }
+
+        .vinha {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0;
+        }
+
+        .vinha .flor {
+            width: 125px;
+            margin: 0;
+            padding: 0;
+            display: block;
+            object-fit: cover;
+            margin-left: -20px;
+        }
+
+        .vinha .flor:first-child {
+            margin-left: 0;
+        }
+
+        .logo-ifpe {
+            width: 90px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="vinha">
+            <img class="flor" src="/images/Flor.png" alt="">
+            <img class="flor" src="/images/Flor.png" alt="">
+            <img class="flor" src="/images/Flor.png" alt="">
+            <img class="flor" src="/images/Flor.png" alt="">
+            <img class="flor" src="/images/Flor.png" alt="">
+            <img class="flor" src="/images/Flor.png" alt="">
+            <img class="flor" src="/images/Flor.png" alt="">
+            <img class="flor" src="/images/Flor.png" alt="">
+            <img class="flor" src="/images/Flor.png" alt="">
+            <img class="flor" src="/images/Flor.png" alt="">
+            <img class="flor" src="/images/Flor.png" alt="">
+            <img class="flor" src="/images/Flor.png" alt="">
+            <img class="flor" src="/images/Flor.png" alt="">
+            <img class="flor" src="/images/Flor.png" alt="">
+        </div>
+
+        <nav>
+            <div class="menu">
+                <button class='material'><a href="/materiais">Materiais Escolares</a></button>
+                <button class='professor'><a href="/professores">Professores</a></button>
+                <button class='turma'><a href="/turmas">Turmas</a></button>
+                <button class='aluno'><a href="/alunos">Alunos</a></button>
+                <button class='responsavel'><a href="/responsaveis">Responsaveis</a></button>
+                <button class='servidor'><a href="/servidores">Servidores</a></button>
+                <button class='fornecedor'><a href="/fornecedores">Fornecedores</a></button>
+                <button class='reestoque'><a href="/reestoques">Reestoques</a></button>
+                <button class='retirada'><a href="/retiradas">Retiradas</a></button>
+            </div>
+            <img class="logo-ifpe" src="/images/Logo_IFPE.svg" alt="Logo IFPE">
+        </nav>
+
+    </header>
+</body>
+
+</html>

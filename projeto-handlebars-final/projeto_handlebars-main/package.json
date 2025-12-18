@@ -1,0 +1,23 @@
+{
+  "name": "handlebars",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^2.2.1",
+    "express": "^5.2.1",
+    "express-handlebars": "^8.0.3",
+    "mysql2": "^3.15.3",
+    "nodemon": "^3.1.11",
+    "sequelize": "^6.37.7",
+    "sql2": "^0.0.1",
+    "sqlite3": "^5.1.7"
+  },
+  "description": "npm innit, npm install express express-handlebars, npm install -y nodemon. Alunos: Adryell William Gomes Nascimento Estéfanas Argentina Castanheira de Mesquita Berdine Galvão Alves Nogueira"
+}
